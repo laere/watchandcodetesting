@@ -1,0 +1,71 @@
+<script src="../tinytest.js"></script>
+<script>
+  // Example 1:
+  //filter([1,2,3], function() {});
+
+  // Example 2:
+  // filter([1,2,3], function(number) {
+  //   console.log(number);
+  // });
+
+  // Example 3:
+  // The index of the current element being processed in the array.
+  // filter([1,2,3], function(number, index) {
+  //   console.log(index);
+  // });
+
+  // Example 4:
+  // The index of the current element being processed in the array.
+  // filter([1,2,3], function(number, index, originalArray) {
+  //   console.log(originalArray);
+  // });
+
+  // Example 5:
+  // filter([1,2,3] function() {
+  //    console.log(this.name);
+  // }, {name: 'zack'});
+
+  // Example 6:
+  // var testArray = [1,2,3];
+  // var filteredArray = filter(testArray, function() {});
+  // testArray !== filteredArray
+
+  // Example 7:
+  // var testArray = [1,2,3];
+  // var filteredArray = filter(testArray, function(element) {
+  //   	return element > 1;
+  // });
+  // Expect filteredArray to be [2,3]
+
+
+  tests({
+    'It should run the callback function array.length times.': function() {
+      var numberOfTimesCallbackHasRun = 0;
+      forEach([1, 2, 3], function() {
+        numberOfTimesCallbackHasRun++;
+      });
+      eq(numberOfTimesCallbackHasRun, 3);
+    },
+    'It should pass in the ith element as the first argument to the callback.': function() {
+      forEach([1], function(number) {
+        eq(number, 1);
+      });
+    },
+    'It should pass in ith as the second argument to the callback.': function() {
+      forEach([1], function(number, index) {
+        eq(index, 0);
+      });
+    },
+    'It should pass in the original array as the third argument to the callback.': function() {
+      var testArray = [1,2,3];
+      forEach(testArray, function(number, index, originalArray) {
+        eq(originalArray, testArray)
+      });
+    },
+    'It should accept an optional this object':function() {
+      forEach([1], function() {
+        eq(this.description, 'I should be accessible inside the callback');
+      }, {description: 'I should be accessible inside the callback'});
+    }
+  });
+</script>
