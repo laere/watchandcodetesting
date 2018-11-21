@@ -1,0 +1,62 @@
+<script src="../tinytest.js"></script>
+<script>
+
+  // function reduce(array, callback, startingValue) {
+  //   var resultSoFar = startingValue;
+  //   for (var i = 0; i < array.length; i++) {
+  //     resultSoFar = callback(resultSoFar, array[i]);
+  //   }
+  //   return resultSoFar;
+  // }
+
+  // reduce(array, callback, initalValue)
+
+  // Native Reduce:
+  // callback parameters:
+  // previousValue (accumulator)
+  // currentValue
+  // currentIndex
+  // array
+
+  // Returns a single value.
+
+  // Description:
+
+  // reduce() executes the callback function once for
+  // each element present in the array.
+  // Excludes holes in the array. (e.g. [/*hole 1 */,1]) (like map)
+
+  // Case A: initalValue is provided.
+
+    // previousValue will be equal to initalValue (if intialValue is 0 then so is previousValue)
+    // currentValue will be equal to the first value in the array. (currentValue = array[0])
+    // callback will start at index 0. (callback starts at array[0] first)
+
+  // Case B: Initial value not provided.
+    // previousValue will be equal to the first value in the array (previousValue = array[0])
+    // and currentValue will be equal to the second value in the array. (currentValue = array[1])
+    // callback will start at index 1 (2nd item in array). (callback starts at array[1])
+
+// Edge cases.
+    // If array is empty and no intialValue was provided.
+    // TypeError should be thrown.
+    // Example: reduce([], function(){}) ==> throw TypeError.
+
+    // If array has one element (regardless of position) and no initialValue
+    // wasprovided, or if intialValue is provided but the array is empty, the solo
+    // value would be returned without calling callback.
+      // reduce([/*hole*/, 1], function(){})
+      // return 1 without calling callback
+
+      // reduce([1], function(){})
+      // return 1 without calling callback
+
+      // reduce([], function(){}, 0)
+      // return 0 without calling callback
+
+      // reduce([/*hole*/, /*hole*/], function(){})
+      // return 0 without calling callback
+
+
+
+</script>

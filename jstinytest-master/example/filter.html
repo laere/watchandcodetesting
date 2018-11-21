@@ -1,5 +1,9 @@
 <script src="../tinytest.js"></script>
 <script>
+
+
+
+
   // Example 1:
   //filter([1,2,3], function() {});
 
@@ -98,7 +102,7 @@
       eq(arrayBeingFiltered !== filteredArray, true);
     },
 
-    'It should return a new array that only has elements where callback is true':function() {
+    'It should return a new array that only has elements where callback returns true':function() {
       var filteredArray = filter([1,2], function(number) {
         return number > 1;
       });
