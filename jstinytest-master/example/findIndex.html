@@ -1,62 +1,95 @@
 <script src="../simpletest.js"></script>
 <script>
 
-The findIndex() method returns the index of the first element in the array that satisfies the provided testing function.
-Otherwise, it returns -1, indicating no element passed the test.
+// The findIndex() method returns the index of the first element in the array that satisfies the provided testing function.
+// Otherwise, it returns -1, indicating no element passed the test.
+//
+// Callback, this
+//
+// Callback Args:
+//     element
+//     index
+//     array
+//
+// If such an element is found, findIndex immediately returns that found element's index.
+// If the callback never returns a truthy value or the array's length is 0, findIndex returns -1.
 
+    function findIndex(array, callback, optionalThisObject) {
 
+        var findIndexCallback = callback;
 
+        if (optionalThisObject) {
+            findIndexCallback = callback.bind(optionalThisObject);
+        }
 
-  function find(array, callback, optionalThisObject) {
-    var findCallback = callback;
+        if (array.length == 0) {
+            return -1;
+        }
 
-    if (optionalThisObject) {
-      findCallback = callback.bind(optionalThisObject);
+        for (var i = 0; i < array.length; i++) {
+            if (findIndexCallback(array[i], i, array)) {
+                return i;
+            }
+        }
+
+        return -1;
     }
-
-    for (var i = 0; i < array.length; i++) {
-      if (findCallback(array[i], i)) {
-        return array[i];
-      }
-    }
-  }
 
 
 tests({
     'It should run the callback function array.length times.': function() {
-      var numberOfTimesCallbackHasRun = 0;
-      find([1,2,3], function() {
-        numberOfTimesCallbackHasRun++;
-      });
+        var numberOfTimesCallbackHasRun = 0;
+        findIndex([1,2,3], function() {
+            numberOfTimesCallbackHasRun++;
+        });
+
     },
     'It should pass in the ith element as the first argument to the callback.': function() {
-      find([1], function(number) {
-        eq(number, 1);
-      });
+        findIndex([1], function(number) {
+            eq(number, 1);
+        });
     },
     'It should pass in ith as the second argument to the callback.': function() {
-      find([1], function(number, index) {
-        eq(index, 0);
-      });
+        findIndex([1], function(number, index) {
+            eq(index, 0);
+        });
+    },
+    'It should pass in the original array as the third argument to the callback.': function() {
+        var testArray = [1,2,3];
+        findIndex(testArray, function(number, index, originalArray) {
+          eq(originalArray, testArray)
+        });
     },
     'It should pass in an optional this object':function() {
-      find([1], function() {
-        eq(this.description, 'I should be accessible inside the callback');
-      }, {description: 'I should be accessible inside the callback'});
+        findIndex([1], function() {
+            eq(this.description, 'this');
+        }, {description: 'this'})
     },
-    'It should return the first value in the array where callback is true':function() {
-      var findElement = find([1,2,5], function(number) {
-        return number > 2;
-      });
-      eq(findElement, 5);
-
+    'It should return the first index position in the array where callback is true':function() {
+        var findIndexPosition = findIndex([1,2,3], function(number, index) {
+            return number > 1;
+        });
+        eq(findIndexPosition, 1);
     },
+    'It should return -1 if the callback returns false':function() {
+        var findIndexPosition = findIndex([1,2,3], function(number, index) {
+            return number > 3;
+        });
+        eq(findIndexPosition, -1);
+    },
+    'It should return -1 if the array.length is equal to 0':function() {
 
-    'It should return undefined if the callback returns false':function() {
-      var returnUndefined = find([1,2,4], function(number) {
-        return number > 4;
-      });
-      eq(returnUndefined, undefined);
+        var findIndexPosition = findIndex([], function(number, index) {
+            return -1;
+        });
+        eq(findIndexPosition, -1);
+    },
+    'It should run for indexex of entries not present in the array':function() {
+        var counter = 0;
+        var result = findIndex([,,,], function() {
+            counter++;
+        });
+        eq(counter, 3);
     }
 
 });

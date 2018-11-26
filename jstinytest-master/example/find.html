@@ -49,7 +49,7 @@
     }
 
     for (var i = 0; i < array.length; i++) {
-      if (findCallback(array[i], i)) {
+      if (findCallback(array[i], i, array)) {
         return array[i];
       }
     }
@@ -73,24 +73,32 @@ tests({
         eq(index, 0);
       });
     },
+
+    'It should pass in the original array as the third argument to the callback.': function() {
+      var testArray = [1,2,3];
+      find(testArray, function(number, index, originalArray) {
+        eq(originalArray, testArray)
+      });
+    },
+
     'It should pass in an optional this object':function() {
       find([1], function() {
         eq(this.description, 'I should be accessible inside the callback');
       }, {description: 'I should be accessible inside the callback'});
     },
     'It should return the first value in the array where callback is true':function() {
-      var findElement = find([1,2,5], function(number) {
+      var result = find([1,2,5], function(number) {
         return number > 2;
       });
-      eq(findElement, 5);
+      eq(result, 5);
 
     },
 
     'It should return undefined if the callback returns false':function() {
-      var returnUndefined = find([1,2,4], function(number) {
+      var result = find([1,2,4], function(number) {
         return number > 4;
       });
-      eq(returnUndefined, undefined);
+      eq(result, undefined);
     }
 
 
