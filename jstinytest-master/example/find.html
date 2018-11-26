@@ -1,0 +1,98 @@
+<script src="../simpletest.js"></script>
+<script>
+
+  // The find() method returns the value of the first element in the array that satisfies the provided testing function.
+  // Otherwise undefined is returned.
+  //
+  // Find Args:
+  //   callback
+  //   this
+  //
+  // Callback Args:
+  //   element
+  //   index
+  //   originalArray
+
+  // Executes callback on each index in the array until the callback returns true.
+  //
+  // if (callback()) { return true } else return { undefined }
+
+
+
+  // Example 1:
+  // forEach([1,2,3], function() {
+  //   console.log('hi');
+  // });
+
+  // Example 2:
+  // forEach([1,2,3], function(number) {
+  //   console.log(number);
+  // });
+
+  // Example 3:
+  // The index of the current element being processed in the array.
+  // forEach([1,2,3], function(number, index) {
+  //   console.log(index);
+  // });
+
+  // Example 4:
+  // The index of the current element being processed in the array.
+  // forEach([1,2,3], function(number, index, originalArray) {
+  //   console.log(originalArray);
+  // });
+
+  function find(array, callback, optionalThisObject) {
+    var findCallback = callback;
+
+    if (optionalThisObject) {
+      findCallback = callback.bind(optionalThisObject);
+    }
+
+    for (var i = 0; i < array.length; i++) {
+      if (findCallback(array[i], i)) {
+        return array[i];
+      }
+    }
+  }
+
+
+tests({
+    'It should run the callback function array.length times.': function() {
+      var numberOfTimesCallbackHasRun = 0;
+      find([1,2,3], function() {
+        numberOfTimesCallbackHasRun++;
+      });
+    },
+    'It should pass in the ith element as the first argument to the callback.': function() {
+      find([1], function(number) {
+        eq(number, 1);
+      });
+    },
+    'It should pass in ith as the second argument to the callback.': function() {
+      find([1], function(number, index) {
+        eq(index, 0);
+      });
+    },
+    'It should pass in an optional this object':function() {
+      find([1], function() {
+        eq(this.description, 'I should be accessible inside the callback');
+      }, {description: 'I should be accessible inside the callback'});
+    },
+    'It should return the first value in the array where callback is true':function() {
+      var findElement = find([1,2,5], function(number) {
+        return number > 2;
+      });
+      eq(findElement, 5);
+
+    },
+
+    'It should return undefined if the callback returns false':function() {
+      var returnUndefined = find([1,2,4], function(number) {
+        return number > 4;
+      });
+      eq(returnUndefined, undefined);
+    }
+
+
+});
+ </script>

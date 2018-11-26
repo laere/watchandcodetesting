@@ -37,6 +37,19 @@
  * -Joe Walnes
  * MIT License. See https://github.com/joewalnes/jstinytest/
  */
+var TinyTestHelper = {
+    renderStats: function(tests, failures) {
+        var numberOfTests = Object.keys(tests).length;
+        var successes = numberOfTests - failures;
+        var summaryString = 'Ran ' + numberOfTests + ' tests: '
+                            + successes + ' successes, '
+                            + failures + ' failures.';
+        var summaryElement = document.createElement('h1');
+        summaryElement.textContent = summaryString;
+        document.body.appendChild(summaryElement);
+    }
+};
+
 var TinyTest = {
     // Takes 1 argument called tests
     run: function(tests) {
@@ -47,16 +60,18 @@ var TinyTest = {
             try {
                 // Apply this to the tinytest object and immediately run the test
                 testAction.apply(this);
-                console.log('Test:', testName, 'OK');
+                console.log('%c ' + testName, 'color: green;');
             } catch (e) {
                 failures++;
-                console.error('Test:', testName, 'FAILED', e);
+                console.groupCollapsed('%c ' + testName, 'color: red;');
                 console.error(e.stack);
+                console.groupEnd();
             }
         }
         setTimeout(function() { // Give document a chance to complete
             if (window.document && document.body) {
                 document.body.style.backgroundColor = (failures == 0 ? '#99ff99' : '#ff9999');
+                TinyTestHelper.renderStats(tests, failures);
             }
         }, 0);
     },
