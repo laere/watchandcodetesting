@@ -1,4 +1,4 @@
-<script src="simpletest.js"></script>
+<script src="../simpletest.js"></script>
 <script>
 
 // The every() method tests whether all elements
@@ -92,6 +92,21 @@ function every(array, callback, optionalThisObject) {
             eq(result, true);
         });
     },
+
+    'Callback should avoid visiting elements that are appended to the array after the call to every': function() {
+      var counter = 0;
+      var array = [1,2,3];
+      var result = every(array, function(number, index) {
+        if (index < 2) {
+          array.push(4);
+        }
+        counter++;
+        return number > 3;
+      });
+
+      eq(counter, 3);
+      eq(result, -1);
+    }
 
   });
 </script>

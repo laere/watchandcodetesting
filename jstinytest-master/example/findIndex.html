@@ -1,37 +1,19 @@
 <script src="../simpletest.js"></script>
 <script>
 
-// The findIndex() method returns the index of the first element in the array that satisfies the provided testing function.
-// Otherwise, it returns -1, indicating no element passed the test.
-//
-// Callback, this
-//
-// Callback Args:
-//     element
-//     index
-//     array
-//
-// If such an element is found, findIndex immediately returns that found element's index.
-// If the callback never returns a truthy value or the array's length is 0, findIndex returns -1.
-
     function findIndex(array, callback, optionalThisObject) {
-
+        if (typeof callback !== 'function') {
+            throw new TypeError ('Pass in a callback function as the second argument')
+        }
         var findIndexCallback = callback;
-
         if (optionalThisObject) {
             findIndexCallback = callback.bind(optionalThisObject);
         }
-
-        if (array.length == 0) {
-            return -1;
-        }
-
         for (var i = 0; i < array.length; i++) {
             if (findIndexCallback(array[i], i, array)) {
                 return i;
             }
         }
-
         return -1;
     }
 
@@ -90,6 +72,15 @@ tests({
             counter++;
         });
         eq(counter, 3);
+    },
+    'It should pass a callback as a second argument' :function() {
+        var isTypeError = false;
+        try {
+            findIndex([1], 'zack')
+        } catch(e) {
+            isTypeError = e instanceof TypeError;
+        }
+        eq(isTypeError, true);
     }
 
 });

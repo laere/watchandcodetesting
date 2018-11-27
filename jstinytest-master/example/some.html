@@ -1,0 +1,121 @@
+<script src="../simpletest.js"></script>
+<script>
+
+  // The some() method tests whether at least one element in the array
+  // passes the test implemented by the provided function.
+
+  // This method returns false for any condition put on an empty array.
+
+
+  // Return value:
+  // true if the callback function returns a truthy value for any array element; otherwise, false.
+
+  // some() executes the callback function once for each element present in the array until it finds one where callback returns
+  // a truthy value (a value that becomes true when converted to a Boolean).
+  // If such an element is found, some() immediately returns true. Otherwise, some() returns false.
+  //
+  // callback is invoked only for indexes of the array which have assigned values;
+  // it is not invoked for indexes which have been deleted or which have never been assigned values.
+
+  // Elements that are appended to the array after the call to some begins will not be visited by callbackfn.
+  // If existing elements of the array are changed, their value as passed to callbackfn will be the value at the time that some visits them;
+  // elements that are deleted after the call to some begins and before being visited are not visited
+
+  function some(array, callback, optionalThisObject) {
+    if (typeof callback !== 'function') {
+      throw new TypeError('Please pass a function as the second argument');
+    }
+    var someCallback = callback;
+
+    if (optionalThisObject) {
+      someCallback = callback.bind(optionalThisObject);
+    }
+    for (var i = 0; i < array.length; i++) {
+      if (i in array) {
+        if (someCallback(array[i], i, array)) {
+          return true;
+        }
+      }
+    }
+    return false;
+  }
+
+
+
+  tests({
+    'It should run the callback function array.length times.': function() {
+      var array = [1,2,3];
+      var numberOfTimesCallbackHasRun = 0;
+      some(array, function() {
+        numberOfTimesCallbackHasRun++
+      });
+      eq(numberOfTimesCallbackHasRun, array.length);
+
+    },
+    'It should pass in the ith element as the first argument to the callback.': function() {
+      some([1], function(number) {
+        eq(number, 1);
+      });
+    },
+    'It should pass in ith as the second argument to the callback.': function() {
+      some([1], function(number, index) {
+        eq(index, 0);
+      });
+    },
+    'It should pass in the original array as the third argument to the callback.': function() {
+      var testArray = [1,2,3];
+      some(testArray, function(number, index, originalArray) {
+        eq(testArray, originalArray);
+      });
+    },
+    'It should accept an optional this object':function() {
+      some([1], function() {
+        eq(this.description, 'Optional this object');
+      }, {description: 'Optional this object'})
+    },
+    'It should pass a callback that is a function as the second argument':function() {
+      var isTypeError = false;
+      try {
+        some([1], 'Zack')
+      } catch(e) {
+        isTypeError = e instanceof TypeError;
+      }
+      eq(isTypeError, true);
+    },
+    'Callback should return true for the first element that meets the callbacks condition':function() {
+      var result = some([1,12,3,7,9,13], function(number, index) {
+        return number > 10;
+      });
+      eq(result, true);
+    },
+    'Callback should return false if all elements return false':function() {
+      var result = some([1,2,3,9,43], function(number, index) {
+        return number > 50;
+      });
+      eq(result, false);
+    },
+    'Callback should return false if array is empty':function() {
+      var result = some([], function(number, index) {
+        return number > 3;
+      });
+      eq(result, false);
+    },
+    'It skips unassigned indexes': function() {
+      var counter = 0;
+      var array = [,,,1,,5,,3,,,undefined,];
+      some(array, function() {
+        counter++;
+      });
+      eq(counter, 4);
+    },
+    'It returns false if array is full of holes': function() {
+      var array = [,,,,,];
+      var result = some(array, function(number, index) {
+        number > 1
+      });
+      eq(result, false);
+    }
+
+
+  });
+</script>
