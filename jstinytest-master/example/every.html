@@ -1,0 +1,97 @@
+<script src="simpletest.js"></script>
+<script>
+
+// The every() method tests whether all elements
+// in the array pass the test implemented by the provided function.
+
+
+// Return value:
+// true if the callback function returns a truthy value for every array element; otherwise, false.
+
+// callbackfn is called only for elements of the
+// array which actually exist; it is not called for missing elements of the array.
+
+
+function every(array, callback, optionalThisObject) {
+    if (typeof callback !== 'function') {
+        throw new TypeError('Please pass in a function as the callback');
+    }
+
+    var everyCallback = callback;
+
+    if (optionalThisObject) {
+       everyCallback = callback.bind(optionalThisObject);
+    }
+
+    for (var i = 0; i < array.length; i++) {
+        if (everyCallback(array[i], i, array)) {
+            return true;
+        }
+    }
+
+    return false;
+}
+
+
+
+  tests({
+    'It should run the callback function array.length times.': function() {
+
+        numberOfTimesCallbackHasRun = 0;
+        every([1,2,3], function() {
+            numberOfTimesCallbackHasRun++;
+        });
+        eq(numberOfTimesCallbackHasRun, 3);
+
+    },
+    'It should pass in the ith element as the first argument to the callback.': function() {
+        every([1], function(number) {
+           eq(number, 1);
+        });
+    },
+    'It should pass in ith as the second argument to the callback.': function() {
+        every([1], function(number, index) {
+           eq(index, 0);
+        });
+    },
+    'It should pass in the original array as the third argument to the callback.': function() {
+        var testArray = [1,2,3];
+        every(testArray, function(number, index, array) {
+            eq(testArray, array);
+        });
+    },
+    'It should accept an optional this object.':function() {
+        every([1], function() {
+            eq(this.name, 'zack');
+        }, {name: 'zack'});
+    },
+    'It should return true if the callback returns truthy for every array element.':function() {
+        var result = every([1,3,5], function(number, index) {
+            return number < 10;
+        });
+        eq(result, true);
+    },
+    'It should return false if the callback returns a false value.':function() {
+        var result = every([1,2,3], function(number, index) {
+           return number < 1;
+        });
+        eq(result, false);
+    },
+    'It should accept a function as the second callback argument.':function() {
+        var isTypeError = false;
+        try {
+            every([1], 'Zack')
+        } catch(e) {
+            isTypeError = e instanceof TypeError;
+        }
+
+        eq(isTypeError, true);
+    },
+    'It should return true if the array is empty':function() {
+        var result = every([], function() {
+            eq(result, true);
+        });
+    },
+
+  });
+</script>
