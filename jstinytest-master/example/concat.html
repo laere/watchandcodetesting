@@ -1,0 +1,100 @@
+<script src="../simpletest.js"></script>
+<script>
+
+  // The concat() method is used to merge two or more arrays.
+  // This method does not change the existing arrays,
+  // but instead returns a new array.
+
+  // Return Value:
+  //   A new Array instance.
+
+  // Args:
+    // valueN:
+      // If valueN is undefined, concat returns a shallow copy of the existing array
+      // on which it is called.
+
+  // It should return a new array.
+
+  // It should create a new array consisting of the elements called in order.
+
+  // It should create a new array consisting of the elements if they are an array.
+
+  // It should create a new array consisting of the elements if they are not an array.
+
+  // It should return a shallow copy of the original arrays.
+      // It should copy object refereces into the new array.
+      // Both the new and original array should refer to the same object.
+
+  // It should copy the values of strings and numbers into the new array.
+
+  // It should include holes
+
+  // It should demonstrate the retention of references
+
+  // Concatenating array(s)/value(s) will leave the originals untouched. Furthermore, any operation
+  // on the new array (except operations on elements which are object references)
+  // will have no effect on the original arrays, and vice versa.
+
+// Retention of References:
+// var num1 = [[1]];
+// var num2 = [2, [3]];
+//
+// var nums = num1.concat(num2);
+//
+// console.log(nums);
+// results in [[1], 2, [3]]
+//
+// modify the first element of num1
+// num1[0].push(4);
+//
+// console.log(nums);
+// results in [[1, 4], 2, [3]]
+
+function concat() {
+  var concated = [];
+
+  // method takes valueN as an arg.
+  // valueN is equal to arguments.length, since it takes a seemingly unlimited value of args
+  // first we must consider adding arrays together first
+  for (var i = 0; i < arguments.length; i++) {
+    // loop through the arguements, and check if they're arrays
+    if (Array.isArray(arguments[i])) {
+      // if true, loop through the element arrays
+      for (var j = 0; j < arguments[i].length; j++) {
+        // push ending values into new array
+        concated.push(arguments[i][j]);
+      }
+    }
+  }
+  return concated;
+}
+
+
+  tests({
+    'It should return an array': function() {
+      var arr1 = [1];
+      var arr2 = [2];
+      var result = concat(arr1, arr2);
+      eq(Array.isArray(result), true);
+    },
+
+    'It should return a new array': function() {
+      var arr1 = [1];
+      var arr2 = [2];
+      var result = concat(arr1, arr2);
+      eq(result !== arr1, true);
+      eq(result !== arr2, true);
+    },
+
+    'It should add two or more arrays together': function() {
+      fail();
+    },
+
+    'It should return a shallow copy of the array if nothing is passed in as an arg': function() {
+      fail();
+    },
+
+
+
+  });
+</script>
