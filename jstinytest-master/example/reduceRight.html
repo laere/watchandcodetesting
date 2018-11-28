@@ -97,19 +97,45 @@ function reduceRight(array, callback, initialValue) {
   // resultSoFar is previousValue
   var resultSoFar = initialValue;
 
+
+
   // No initialValue
   if (arguments.length < 3) {
-    resultSoFar = array[startingIndex];
-    startingIndex--;
+
+    if (Object.keys(array).length === 0) {
+      throw new TypeError('Array is empty, and no initial value.');
+    }
+
+    if (Object.keys(array).length === 1) {
+      // Grab index of the element
+      var onlyIndex = Object.keys(array)[0];
+      // Grab the element itself
+      var onlyElement = array[onlyIndex];
+      // return the element
+      return onlyElement;
+    }
+
+    while (startingIndex in array === false && startingIndex > 0) {
+      startingIndex--;
+    }
+
+      resultSoFar = array[startingIndex];
+      startingIndex--;
+
+  } else {
+    if (Object.keys(array) === 0) {
+        return initialValue;
+    }
   }
 
 
   // initialValue
   // [1,2,3]
   for (var i = startingIndex; i >= 0; i--) {
-    resultSoFar = callback(resultSoFar, array[i], i);
+    if (i in array) {
+      resultSoFar = callback(resultSoFar, array[i], i);
+    }
   }
-
   return resultSoFar;
 }
 
@@ -150,47 +176,86 @@ tests({
     })
   },
 
-  'If no initialValue, previousValue should start with the last value in the array.':function() {
+  'If no initialValue, previousValue should start with the last value in the array array[array.length - 1].':function() {
     reduceRight([1,2], function(previousValue) {
       eq(previousValue, 2)
     });
   },
 
-  'If no initialValue, currentValue should start with the second to last value in the array.':function() {
-    fail();
+  'If no initialValue, currentValue should start with the second to last value in the array array[array.length - 2].':function() {
+    reduceRight([1,2], function(previousValue, currentValue) {
+      eq(currentValue, 1);
+    });
 
   },
 
-  'If no initialValue, callback will start at array.length - 2.':function() {
-    fail();
+  'If no initialValue, callback will start at array[array.length - 2].':function() {
+    reduceRight([1,2], function(previousValue, currentValue, currentIndex) {
+      eq(currentIndex, 0);
+    });
   },
 
   'If initialValue, and array is empty, return initialValue without calling callback':function() {
-    fail();
+    var counter = 0;
+    var initialValue = 0;
+    var result = reduceRight([], function() {
+      counter++;
+    }, initialValue);
+    eq(result, 0);
+    eq(counter, 0);
   },
 
   'If no initialValue, and array has one element, it should return that element without calling callback':function() {
-    fail();
+    var counter = 0;
+    var result = reduceRight([1], function(){
+      count++;
+    })
+    eq(result, 1);
+    eq(counter, 0);
   },
 
   'It should actually reduce.':function() {
-    fail();
+    var result = reduceRight([1,2,3], function(previousValue, currentValue) {
+      return previousValue + currentValue;
+    });
+    eq(result, 6);
   },
 
   'If initialValue, It should exclude holes.':function() {
-    fail();
+    var counter = 0;
+    var result = reduceRight([1,,,2,,,3,,], function(previousValue, currentValue) {
+      counter++;
+      return previousValue + currentValue;
+    }, 0);
+    eq(counter, 3);
+    eq(result, 6);
   },
 
   'If no initialValue, It should exclude holes.':function() {
-    fail();
+    var counter = 0;
+    var result = reduceRight([1,,2,,3], function(previousValue, currentValue) {
+      counter++;
+      return previousValue + currentValue;
+    });
+    eq(counter, 2);
+    eq(result, 6);
   },
 
   'If array is empty, and no initialValue, throw TypeError.':function() {
-    fail();
+    var isTypeError = false;
+    try {
+      reduceRight([],function(){})
+    } catch(e) {
+      isTypeError = e instanceof TypeError;
+    }
+    eq(isTypeError, true);
   },
 
   'It should pass array as fourth argument to callback.':function() {
-    fail();
+    var testArray = [1,2];
+    reduceRight([1], function(previousValue, currentValue, currentIndex, arrayToReduce) {
+      eq(testArray, arrayToReduce);
+    });
   }
 
 
