@@ -50,24 +50,83 @@
 // console.log(nums);
 // results in [[1, 4], 2, [3]]
 
-function concat() {
-  var concated = [];
+// function concat() {
+//     var concated = [];
+//
+//     // method takes valueN as an arg.
+//     // valueN is equal to arguments.length, since it takes a seemingly unlimited value of args
+//     // first we must consider adding arrays together first
+//     for (var i = 0; i < arguments.length; i++) {
+//       // loop through the arguements, and check if they're arrays
+//       if (Array.isArray(arguments[i])) {
+//         // if true, loop through the element arrays
+//         for (var j = 0; j < arguments[i].length; j++) {
+//         if (j in arguments[i]) {
+//             concated.push(arguments[i][j]);
+//           }  else {
+//             concated.length++;
+//           }
+//         }
+//       } else {
+//       if (i === 0) {
+//         if (Object.prototype.toString.call8arguments[i] === '[object Object]') {
+//           cocnated.push(arguments[i]);
+//         } else {
+//           if (arguments[i] === null || arguments[i] === undefined) {
+//             throw new TypeError('Do not pass in null or undefined as the first argument');
+//           } else if (arguments[i] === 'number' || arguments[i] === 'string' || arguments[i] === 'boolean') {
+//             concated.push(arguments[i]);
+//           }
+//         }
+//       } else {
+//         concated.push(arguments[i]);
+//       }
+//     }
+//   }
+//   return concated
+// }
 
-  // method takes valueN as an arg.
-  // valueN is equal to arguments.length, since it takes a seemingly unlimited value of args
-  // first we must consider adding arrays together first
-  for (var i = 0; i < arguments.length; i++) {
-    // loop through the arguements, and check if they're arrays
-    if (Array.isArray(arguments[i])) {
-      // if true, loop through the element arrays
-      for (var j = 0; j < arguments[i].length; j++) {
-        // push ending values into new array
-        concated.push(arguments[i][j]);
+function concat() {
+    var concated = [];
+
+    // Loop through the arguments
+    for (var i = 0; i < arguments.length; i++) {
+      // Check if argument is an array
+      if (Array.isArray(arguments[i])) {
+        // Loop through elements of the array
+        for (var j = 0; j < arguments[i].length; j++) {
+          // if the elements are in the array push them to the new array
+          if (j in arguments[i]) {
+            concated.push(arguments[i][j]);
+          } else {
+            // else add length -> holes
+            concated.length++;
+          }
+        }
+      } else {
+        // If no args
+        if (i === 0) {
+
+          if (Object.prototype.toString.call(arguments[i]) === "[object Object]") {
+            concated.push(arguments[i]);
+          } else {
+            // If args being passed are null or undefined throw error
+            if (arguments[i] === null || arguments[i] === undefined) {
+              throw new TypeError('Do not pass in null or undefined as the 1st argument.');
+              // else if data types number, string, boolean, symbol are being passed
+              // turn them into objects
+            } else if (typeof arguments[i] === "number" || typeof arguments[i] === "string" || typeof arguments[i] === "boolean" || typeof arguments[i] === "symbol") {
+              let toObject = Object(arguments[i]);
+              concated.push(toObject);
+            }
+          }
+        } else {//i !== 0
+          concated.push(arguments[i]);
+        }
       }
     }
+    return concated;
   }
-  return concated;
-}
 
 
   tests({
@@ -87,13 +146,65 @@ function concat() {
     },
 
     'It should add two or more arrays together': function() {
-      fail();
+
+      var arr1 = [1,2,3];
+      var arr2 = [4,5,6];
+      var arr3 = [7,8,9];
+      var expected = [1,2,3,4,5,6,7,8,9];
+      var result = concat(arr1, arr2, arr3);
+      result.forEach(function(ele, i) {
+        eq(ele, expected[i])
+      });
     },
 
-    'It should return a shallow copy of the array if nothing is passed in as an arg': function() {
-      fail();
+    'It handles data types besides arrays by adding them to the new array.': function () {
+     var result = concat([0], true, 5, 'string', {}, function () {}, null, undefined, NaN);
+     eq(result.toString(), "0,true,5,string,[object Object],function () {},,,NaN");
+   },
+
+   'It should accept holes.': function () {
+      var array = [,,,];
+      var result = concat(array, 1);
+      eq(result.length, 4);
+      eq(0 in result, false);
     },
 
+    'It should copy object references into the new array.': function () {
+     var object = {name: 'zack'};
+     var result = concat([1], object);
+     eq(result.length, 2);
+     eq(result[0], 1);
+     eq(result[1].name, "zack");
+     object.name = 'zack';
+     eq(result[1].name, "zack");
+   },
+
+    'If pass in an object as 1st argument, add the object reference to the new array.': function () {
+     var object = {1: 1};
+     var expected = [object, 1];
+     var result = concat(object, 1);
+     result.forEach(function (ele, i) {
+       eq(ele, expected[i]);
+     });
+   },
+   'If pass in null as 1st argument, throw a TypeError.': function () {
+      var isTypeError = false;
+      try {
+        concat(null, 1);
+      } catch (e) {
+        isTypeError = e instanceof TypeError;
+      }
+      eq(isTypeError, true);
+    },
+    'If pass in undefined as 1st argument, throw a TypeError.': function () {
+      var isTypeError = false;
+      try {
+        concat(undefined, 'hi');
+      } catch (e) {
+        isTypeError = e instanceof TypeError;
+      }
+      eq(isTypeError, true);
+    },
 
 
   });
