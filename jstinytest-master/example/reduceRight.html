@@ -51,54 +51,10 @@
 // If the array has only one element and no initialValue it should return the solo value without calling callback.
 // If initialValue, but the array is empty, it should return the solo value without calling callback.
 
-
-// function reduce(array, callback, initialValue) {
-//   var startingIndex = 0;
-//   var resultSoFar = initialValue;
-//   var length = array.length
-//   var arrayIndexes = Object.keys(array);
-//   // No initialValue.
-//   if (arguments.length < 3) {
-//     // If array is empty, throw isTypeError.
-//     if (arrayIndexes.length === 0) {
-//       throw new TypeError('Reduce of empty array with no initial value');
-//     }
-//     // If array has one element, just return it.
-//     if (arrayIndexes.length === 1) {
-//       // Grabbing the index position.
-//       var onlyIndex = arrayIndexes[0];
-//       // Grabbing the element at that index position.
-//       var onlyElement = array[onlyIndex];
-//       return onlyElement;
-//     }
-//     // We want to skip holes at the beginning of the array.
-//     //[, , , 1] Checks if index is in array.
-//     while (startingIndex in array === false && startingIndex < length) {
-//       startingIndex++;
-//     }
-//     resultSoFar = array[startingIndex];
-//     startingIndex++;
-//   // Has initialValue.
-//     } else {
-//        if (arrayIndexes.length === 0) {
-//         return initialValue;
-//       }
-//     }
-//     for (var i = startingIndex; i < length; i++) {
-//       if (i in array) {
-//         resultSoFar = callback(resultSoFar, array[i], i, array);
-//       }
-//     }
-//     return resultSoFar;
-//   };
-
 function reduceRight(array, callback, initialValue) {
   var startingIndex = array.length - 1;
   // resultSoFar is previousValue
   var resultSoFar = initialValue;
-
-
-
   // No initialValue
   if (arguments.length < 3) {
 
@@ -114,14 +70,12 @@ function reduceRight(array, callback, initialValue) {
       // return the element
       return onlyElement;
     }
-
     while (startingIndex in array === false && startingIndex > 0) {
       startingIndex--;
     }
-
       resultSoFar = array[startingIndex];
       startingIndex--;
-
+  // If initial value
   } else {
     if (Object.keys(array) === 0) {
         return initialValue;
