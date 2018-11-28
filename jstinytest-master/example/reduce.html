@@ -57,6 +57,7 @@
           return initialValue;
         }
       }
+
       for (var i = startingIndex; i < length; i++) {
         if (i in array) {
           resultSoFar = callback(resultSoFar, array[i], i, array);

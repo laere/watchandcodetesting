@@ -1,0 +1,199 @@
+<script src="../simpletest.js"></script>
+<script>
+
+  // Prototype implementation:
+  // function reduce(array, callback, startingValue) {
+  //   var resultSoFar = startingValue;
+  //   var length = array.length;
+  //   for (var i = length - 1; i >= 0; i--) {
+  //     resultSoFar = callback(resultSoFar, array[i], i, array);
+  //   }
+  //   return resultSoFar;
+  // }
+
+
+// The reduceRight() method applies a function against an previousValue
+// and each value of the array (from right-to-left) to reduce it to a single value.
+//
+// reduceRight arguments:
+//   array
+//   Callback
+//   initialValue
+//
+// Callback args:
+//   previousValue (previousValue)
+//   currentValue
+//   index
+//   array
+
+// reduceRight executes the callback function once for each element present in the array,
+// excluding holes in the array, receiving four arguments: the initial
+// value (or value from the previous callback call), the value of the current element,
+// the current index, and the array over which iteration is occurring.
+
+
+
+// Requirements:
+// If initialValue, then previousValue will be equal to initialValue.
+// If initialValue, then previousValue will be equal to the last value in the array.
+
+// If no initialValue, previousValue will equal the last value in the array.
+// If no initialValue, currentValue will be equal to the second to last value in the array.
+
+
+
+// If the array is empty and no initialValue was provided, TypeError would be thrown.
+
+// It should exclude holes.
+// It should reduce.
+
+
+// If the array has only one element and no initialValue it should return the solo value without calling callback.
+// If initialValue, but the array is empty, it should return the solo value without calling callback.
+
+
+// function reduce(array, callback, initialValue) {
+//   var startingIndex = 0;
+//   var resultSoFar = initialValue;
+//   var length = array.length
+//   var arrayIndexes = Object.keys(array);
+//   // No initialValue.
+//   if (arguments.length < 3) {
+//     // If array is empty, throw isTypeError.
+//     if (arrayIndexes.length === 0) {
+//       throw new TypeError('Reduce of empty array with no initial value');
+//     }
+//     // If array has one element, just return it.
+//     if (arrayIndexes.length === 1) {
+//       // Grabbing the index position.
+//       var onlyIndex = arrayIndexes[0];
+//       // Grabbing the element at that index position.
+//       var onlyElement = array[onlyIndex];
+//       return onlyElement;
+//     }
+//     // We want to skip holes at the beginning of the array.
+//     //[, , , 1] Checks if index is in array.
+//     while (startingIndex in array === false && startingIndex < length) {
+//       startingIndex++;
+//     }
+//     resultSoFar = array[startingIndex];
+//     startingIndex++;
+//   // Has initialValue.
+//     } else {
+//        if (arrayIndexes.length === 0) {
+//         return initialValue;
+//       }
+//     }
+//     for (var i = startingIndex; i < length; i++) {
+//       if (i in array) {
+//         resultSoFar = callback(resultSoFar, array[i], i, array);
+//       }
+//     }
+//     return resultSoFar;
+//   };
+
+function reduceRight(array, callback, initialValue) {
+  var startingIndex = array.length - 1;
+  // resultSoFar is previousValue
+  var resultSoFar = initialValue;
+
+  // No initialValue
+  if (arguments.length < 3) {
+    resultSoFar = array[startingIndex];
+    startingIndex--;
+  }
+
+
+  // initialValue
+  // [1,2,3]
+  for (var i = startingIndex; i >= 0; i--) {
+    resultSoFar = callback(resultSoFar, array[i], i);
+  }
+
+  return resultSoFar;
+}
+
+tests({
+
+  'If initialValue, callback should run array.length times.':function() {
+    var numberOfTimesCallbackHasRun = 0;
+    reduceRight([1], function() {
+      numberOfTimesCallbackHasRun++;
+    }, 0);
+    eq(numberOfTimesCallbackHasRun, 1);
+
+  },
+
+  'If no initialValue, callback should run array.length - 1 times.':function() {
+    var numberOfTimesCallbackHasRun = 0;
+    reduceRight([1], function() {
+      numberOfTimesCallbackHasRun++;
+    });
+    eq(numberOfTimesCallbackHasRun, 0);
+  },
+
+  'If initialValue, previousValue should start with initialValue.':function() {
+    reduceRight([1], function(previousValue) {
+      eq(previousValue, 0);
+    }, 0);
+  },
+
+  'If initialValue, currentValue should start with array[array.length - 1]':function() {
+    reduceRight([1], function(previousValue, currentValue) {
+      eq(currentValue, 1);
+    }, 0);
+  },
+
+  'If initialValue, callback will start at array.length - 1.':function() {
+    reduceRight([1], function(previousValue, currentValue, currentIndex) {
+      eq(currentIndex, 0);
+    })
+  },
+
+  'If no initialValue, previousValue should start with the last value in the array.':function() {
+    reduceRight([1,2], function(previousValue) {
+      eq(previousValue, 2)
+    });
+  },
+
+  'If no initialValue, currentValue should start with the second to last value in the array.':function() {
+    fail();
+
+  },
+
+  'If no initialValue, callback will start at array.length - 2.':function() {
+    fail();
+  },
+
+  'If initialValue, and array is empty, return initialValue without calling callback':function() {
+    fail();
+  },
+
+  'If no initialValue, and array has one element, it should return that element without calling callback':function() {
+    fail();
+  },
+
+  'It should actually reduce.':function() {
+    fail();
+  },
+
+  'If initialValue, It should exclude holes.':function() {
+    fail();
+  },
+
+  'If no initialValue, It should exclude holes.':function() {
+    fail();
+  },
+
+  'If array is empty, and no initialValue, throw TypeError.':function() {
+    fail();
+  },
+
+  'It should pass array as fourth argument to callback.':function() {
+    fail();
+  }
+
+
+});
+
+</script>
