@@ -40,8 +40,6 @@
 // If no initialValue, previousValue will equal the last value in the array.
 // If no initialValue, currentValue will be equal to the second to last value in the array.
 
-
-
 // If the array is empty and no initialValue was provided, TypeError would be thrown.
 
 // It should exclude holes.
@@ -81,13 +79,10 @@ function reduceRight(array, callback, initialValue) {
         return initialValue;
     }
   }
-
-
   // initialValue
-  // [1,2,3]
   for (var i = startingIndex; i >= 0; i--) {
     if (i in array) {
-      resultSoFar = callback(resultSoFar, array[i], i);
+      resultSoFar = callback(resultSoFar, array[i], i, array);
     }
   }
   return resultSoFar;
