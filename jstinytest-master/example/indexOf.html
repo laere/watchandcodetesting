@@ -36,14 +36,25 @@
     // e.g [1,2,1,4,5,0,9,1,6,7,8,9].indexOf(1, -11);
     // expected output : 2
 
-  function indexOf(array, searchElement) {
+  function indexOf(array, searchElement, fromIndex) {
     var searchElement;
+    var fromIndex;
+    var length = array.length;
 
-    for (var i = 0; i < array.length; i++) {
+    if (arguments.length < 3) {
+      fromIndex = 0;
+    }
+
+    if (fromIndex < 0) {
+      fromIndex = length - Math.abs(fromIndex);
+    }
+
+    for (var i = fromIndex; i < length; i++) {
       if (searchElement === array[i]) {
         return i;
       }
     }
+   return -1;
   }
 
 
@@ -53,20 +64,36 @@
       eq(result, 1);
     },
     'It should return -1 if the element is not found.': function() {
-      fail();
-    },
-    'It should return -1 if undefined, null, NaN is passed as the only arg.': function() {
-      fail();
+      var result = indexOf([1,2], 3);
+      eq(result, -1);
     },
     'It should return -1 if the index is greater than or equal to the arrays length.': function() {
-      fail();
+      // if fromIndex >= array.length return -1
+      var result = indexOf([1], 1, 2)
+      eq(result, -1);
     },
     'If the provided index is 0, the entire array is searched.': function() {
-      fail();
+      var result = indexOf([1,2,3], 3, 0)
+      eq(result, 2);
     },
     'It should take negative numbers as the offset from the end of the array.': function() {
-      fail();
+      var result = indexOf([1,2,1,3,1,4,1,5,1], 1, -6);
+      eq(result, 4);
     },
+    'It should return -1 if the array is empty and there are no args': function() {
+      var result = indexOf([]);
+      eq(result, -1);
+    },
+    'It should return -1 if the array is empty and a searchElement is passed.': function() {
+      var result = indexOf([], 1);
+      eq(result, -1);
+    },
+    'It should return -1 if the array is empty and a searchElement and fromIndex is passed.': function() {
+      var result = indexOf([],1,1);
+      eq(result, -1);
+    }
+
+
 
   });
 </script>
