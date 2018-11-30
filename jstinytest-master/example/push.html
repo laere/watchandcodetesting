@@ -7,14 +7,35 @@
 // Return value:
 //   new length property of the object which the method was called upon
 
+function push() {
+  var newArray = [];
+
+  for (var i = 0; i <arguments.length; i++) {
+    newArray[newArray.length] = arguments[i];
+  }
+
+  return newArray.length;
+}
+
 
 tests({
 
-  'It should return the new length of the array.': function() {},
-  'It should add an item to an array.': function() {},
-  'It should add more than one item at a time to an array.': function() {},
-  '': function() {},
-
+  'It should return the new length of the array.': function() {
+    var resultLength = push();
+    eq(resultLength === 0, true);
+  },
+  'It should add an item to an array.': function() {
+    var result = push(1);
+    eq(result === 1, true);
+  },
+  'It should take multiple arguments as items to add to the array.': function() {
+    var result = push(1,2,3);
+    eq(result === 3, true);
+  },
+  'It should return length 0 if array is empty.': function() {
+    var resultLength = push();
+    eq(resultLength === 0, true);
+  }
 
 });
 
