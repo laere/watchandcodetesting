@@ -11,26 +11,30 @@
 
 function join(array, seperator) {
   var newStr = '';
+  var firstElement = array[0];
 
-    newStr += array[0];
-
-    if (array.length === 0) {
-      newStr = '';
-    }
-
-    for (var i = 1; i < array.length; i++) {
-      if (array[i] === null || array[i] === undefined) {
-        array[i] = '';
-      }
-      if (seperator || seperator === '') {
-          newStr += seperator + array[i];
-      } else {
-          newStr += ',' + array[i];
-      }
-    }
-   return newStr;
-
+  if (array.length === 0) {
+    newStr = '';
   }
+
+  if (firstElement === null || firstElement === undefined) {
+       firstElement = '';
+  }
+
+  newStr += firstElement;
+
+  for (var i = 1; i < array.length; i++) {
+    if (array[i] === null || array[i] === undefined) {
+         array[i] = '';
+    }
+    if (seperator || seperator === '') {
+        newStr += seperator + array[i];
+    } else {
+        newStr += ',' + array[i];
+    }
+  }
+ return newStr;
+}
 
 
 
