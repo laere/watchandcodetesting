@@ -1,0 +1,133 @@
+<script src="../simpletest.js"></script>
+<script>
+
+// The slice() method returns a shallow copy of a portion of an array into a new array object
+// selected from begin to end (end not included). The original array will not be modified.
+
+// begin Optional
+  // Zero-based index at which to begin extraction.
+  // A negative index can be used, indicating an offset from the end of the sequence. slice(-2) extracts the last two elements in the sequence.
+  // If negative, it is treated as length+start where length = array.length
+  //   if (optionalBegin < 0) begin = optionalBegin + array.length
+  // If begin is undefined, slice begins from index 0.
+
+  // If begin is greater than the length of the sequence, an empty array is returned.
+      // if optionalBegin >= array.length return newArray
+
+// end Optional
+  // Zero-based index before which to end extraction. slice extracts up to but not including end.
+  // For example, slice(1,4) extracts the second element through the fourth element (elements indexed 1, 2, and 3).
+  // A negative index can be used, indicating an offset from the end of the sequence. slice(2,-1) extracts the third element through the second-to-last element in the sequence.
+  // If end is omitted, slice extracts through the end of the sequence (arr.length).
+  // If end is greater than the length of the sequence, slice extracts through to the end of the sequence (arr.length).
+  // If negative, it is treated as length+end where length = array.length
+
+// Return Value:
+  //A new array containing the extracted elements.
+
+  //If no arguments are passed in, return the originalArray.
+  //If NaN/null/undefined is passed return originalArray.
+  //If true is passed in as only arg remove first element in the array E.G. slice(1);
+
+// Requirements:
+
+  //It should return a new Array.
+
+  // Begin:
+  //   If begin is undefined, slice begins from index 0.
+  //   If begin is a negative value, it offsets from the end of the array.
+  //   If begin >= array.length, return an empty array.
+
+  // End:
+  //   If end is omitted, slice extracts through array.length.
+  //   If end > array.length, slice extracts through array.length.
+  //   If end is a negative value, offset from the end of the array.
+  //     E.g.[1,2,3].slice(-1) -> [3]
+  //   It should extract up to, but not including end value.
+  //     E.g.[1,2,3,4,5].slice(1,4) -> [2,3,4]
+
+
+function slice(array, optionalBegin, optionalEnd) {
+  var begin;
+  var end;
+  var newArray = [];
+
+  if (optionalBegin === undefined) {
+    begin = 0;
+  } else {
+    if (optionalBegin < 0) {
+      begin = optionalBegin + array.length;
+    } else if (optionalBegin >= array.length) {
+        return newArray;
+    } else {
+      begin = optionalBegin;
+    }
+  }
+
+  if (optionalEnd === undefined) {
+    end = array.length;
+  } else {
+    if (optionalEnd < 0) {
+      end = optionalEnd + array.length;
+    } else if (optionalEnd > array.length) {
+      end = array.length;
+    } else {
+      end = optionalEnd;
+    }
+  }
+
+  for (var i = begin; i < end; i++) {
+    newArray.push(array[i]);
+  }
+
+  return newArray;
+}
+
+
+tests({
+
+  'It should return a new Array.': function() {
+    var testArray = [1];
+    var result = slice(testArray);
+    eq(Array.isArray(result), true);
+    eq(testArray === result, false);
+  },
+
+  'It should return an empty array if optionalBegin >= array.length': function() {
+    var result = slice([1,2,3], 30);
+    eq(Array.isArray(result), true);
+    eq(result.length === 0, true);
+  },
+
+  'If optionalBegin < 0 (negative value) offset it from the end of the sequence.': function() {
+    var testArray1 = [1,2,3,4,5];
+    var testArray2 = [1,2,3,4,5];
+    var result1 = slice(testArray1, -2);
+    var result2 = slice(testArray2, -2);
+    eq(result1.length, result2.length);
+  },
+
+  'If optionalBegin is undefined begin = 0': function() {
+    var result = slice([1,2,3], undefined);
+    eq(result.length === 3, true);
+  },
+  'If optionalEnd < 0 (negative value) offset it from the end of the sequence.': function() {
+    var testArray1 = [1,2,3,4,5];
+    var testArray2 = [1,2,3,4,5];
+    var result1 = slice(testArray1, 1, -1);
+    var result2 = slice(testArray2, 1, -1);
+    eq(result1.length, result2.length);
+    eq(result1.length === 3, true);
+    eq(result2.length === 3, true);
+
+
+  },
+  'If optionalEnd is undefined end = array.length': function() {
+    var result = slice([1,2,3], 0, undefined);
+    eq(result.length === 3, true);
+  }
+
+});
+
+
+</script>
