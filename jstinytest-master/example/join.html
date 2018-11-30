@@ -19,10 +19,11 @@ function join(array, seperator) {
     }
 
     for (var i = 1; i < array.length; i++) {
+      if (array[i] === null || array[i] === undefined) {
+        array[i] = '';
+      }
       if (seperator || seperator === '') {
           newStr += seperator + array[i];
-      } else if (array[i] === null || array[i] === undefined) {
-          array[i] = '';
       } else {
           newStr += ',' + array[i];
       }
@@ -55,10 +56,12 @@ tests({
     eq(result === "1-2-3", true);
   },
   'It should convert a null value to an empty string': function() {
-    fail();
+    var result = join([1,null,3]);
+    eq (result === "1,,3", true);
   },
   'It should return an empty string if an element is undefined.': function() {
-    fail();
+    var result = join([1,undefined,3]);
+    eq (result === "1,,3", true);
   },
   'It should work for array-like objects.': function() {
     var array = [1, 'a', true];
