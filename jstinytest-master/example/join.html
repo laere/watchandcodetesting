@@ -1,0 +1,72 @@
+<script src="../simpletest.js"></script>
+<script>
+
+//It should return a new string with all array elements joined.
+//It should return an empty strring if arr.length === 0.
+//It should return an empty string in an element is null.
+//It should return an empty string if an element is undefined.
+//It should take a seperator as an argument.
+//It should use a comma as a default seperator.
+//it should work for array-like objects.
+
+function join(array, seperator) {
+  var newStr = '';
+
+    newStr += array[0];
+
+    if (array.length === 0) {
+      newStr = '';
+    }
+
+    for (var i = 1; i < array.length; i++) {
+      if (seperator || seperator === '') {
+          newStr += seperator + array[i];
+      } else if (array[i] === null || array[i] === undefined) {
+          array[i] = '';
+      } else {
+          newStr += ',' + array[i];
+      }
+    }
+   return newStr;
+
+  }
+
+
+
+tests({
+
+  'It should convert all elements to a string': function() {
+    var result = join([1,2,3]);
+    eq(typeof result === "string", true);
+  },
+  'It should return a new string with all array elements joined.': function() {
+    var array = [1,2,3];
+    var result = join([1,2,3]);
+    eq(typeof result === "string", true);
+    eq(Array.isArray(array), true);
+    eq(typeof result !== typeof array, true);
+  },
+  'It should return an empty string if arr.length === 0.': function() {
+    var result = join([]);
+    eq(result === '', true);
+  },
+  'It should take a seperator as an argument.': function() {
+    var result = join([1,2,3], '-');
+    eq(result === "1-2-3", true);
+  },
+  'It should convert a null value to an empty string': function() {
+    fail();
+  },
+  'It should return an empty string if an element is undefined.': function() {
+    fail();
+  },
+  'It should work for array-like objects.': function() {
+    var array = [1, 'a', true];
+    var result = join(array);
+    eq(result === "1,a,true", true);
+  }
+
+});
+
+
+</script>
