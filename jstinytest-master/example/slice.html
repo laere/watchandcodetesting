@@ -119,12 +119,22 @@ tests({
     eq(result1.length, result2.length);
     eq(result1.length === 3, true);
     eq(result2.length === 3, true);
-
-
   },
   'If optionalEnd is undefined end = array.length': function() {
     var result = slice([1,2,3], 0, undefined);
     eq(result.length === 3, true);
+  },
+
+  'If null is passed as optionalBegin, return a new array': function() {
+    var result = slice([1], 0, null);
+    eq(Array.isArray(result), true);
+    eq(result.length === 0, true);
+  },
+
+  'If null is passed as optionalEnd, return a new array': function() {
+    var result = slice([1], null, 0);
+    eq(Array.isArray(result), true);
+    eq(result.length === 0, true);
   }
 
 });
