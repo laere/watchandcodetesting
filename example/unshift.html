@@ -12,40 +12,11 @@
 //It should return undefined if the array is empty.
 
 
-function shift(array) {
-
-  if (array.length === 0) {
-    return undefined;
-  } else {
-    var shiftedElement = array[0];
-
-    for (var i = 0; i < array.length; i++) {
-      array[i] = arguments[i];
-    }
-  }
-  array.length--;
-  return shiftedElement;
-}
 
 
 
 tests({
-  'It should return the value of the removed element.':function() {
-    var array = [1,2,3];
-    var result = shift(array);
-    eq(result, 1);
-  },
-  'It should change the length of the array.':function() {
-    var array = [1,2,3];
-    shift(array);
-    eq(array.length === 2, true);
-    eq(array.includes(1), false);
-  },
-  'It should return undefined if the array is empty.':function() {
-    var result = shift([]);
-    eq(result, undefined);
-  }
-
+  
 });
 
 
