@@ -1,0 +1,74 @@
+<script src="../simpletest.js"></script>
+<script>
+
+// The concat() method is used to merge two or more arrays.
+// This method does not change the existing arrays, but instead returns a new array.
+
+// Return value:
+//   A new array.
+
+// Requirements:
+//   It should merge two or more arrays.
+//   It should return a new array.
+//   It should handle different data types.
+//   It should demonstrate retention of references.
+
+function concat() {
+  var concatedArray = new Array();
+
+  if (arguments.length === 0) {
+    return concatedArray;
+  }
+
+  for (i = 0; i < arguments.length; i++) {
+    if (Array.isArray(arguments[i])) {
+      for (j = 0; j < arguments[i].length; j++) {
+        concatedArray.push(arguments[i][j]);
+      }
+    } else {
+      if (typeof arguments[i] === 'string' || typeof arguments[i] === 'boolean' || typeof arguments[i] === 'number' || typeof arguments[i] === 'object') {
+        concatedArray.push(arguments[i]);
+      }
+    }
+  }
+  return concatedArray;
+}
+
+tests({
+
+  'It should return a new array.':function() {
+    var result = concat();
+    eq(Array.isArray(result), true);
+    eq(result.length, 0);
+  },
+  'It should merge two or more arrays.':function() {
+    var array1 = [1,2];
+    var array2 = [3,4];
+    var result = concat(array1, array2);
+    eq(result.length, 4);
+    eq(result[0], 1);
+    eq(result[1], 2);
+    eq(result[2], 3);
+    eq(result[3], 4);
+  },
+  'It should handle different data types.':function() {
+    var array1 = [1,2];
+    var str = 'zack';
+    var bool = true;
+    var myNum = 50;
+    var result = concat(array1, str, bool, myNum);
+    eq(result.length, 5);
+    eq(result[0], 1);
+    eq(result[1], 2);
+    eq(result[2], 'zack');
+    eq(result[3], true);
+    eq(result[4], 50);
+  },
+  'It should return an empty array of no arguments are passed in': function() {
+    var result = concat();
+    eq(result.length, 0);
+  },
+
+});
+
+</script>
