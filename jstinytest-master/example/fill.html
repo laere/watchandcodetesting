@@ -1,0 +1,113 @@
+<script src="simpletest.js"></script>
+<script>
+
+// The fill() method fills all the elements of
+// an array from a start index to
+// an end index with a static value.
+// The end index is not included.
+
+// for (var i = startIndex; i < endIndex; i++) {
+//    array[i] = value;
+//}
+
+// The start and end arguments are optional with default values of 0 and the length of the this object.
+    //startIndex === 0
+    //endIndex === array.length
+// If start is negative, it is treated as length+start where length is the length of the array.
+    //if start< 0
+        //startIndex = start + array.length
+// If end is negative, it is treated as length+end.
+    //if end < 0
+        //endIndex = end + array.length
+
+
+//  Return value:
+//     The modified array.
+
+// Arguments:
+    // array
+    // value
+    // start
+    // end
+
+    function fill(array, value, start, end) {
+        var startIndex = start || 0;
+        var endIndex = end || array.length;
+
+        if (start < 0) {
+          startIndex = start + array.length;
+        } else if (start > array.length) {
+          startIndex = 0;
+        }
+
+        if (end < 0) {
+          endIndex = end + array.length;
+        } else if (end === 0 || end === -0) {
+          return array;
+        } else if (end > array.length) {
+          endIndex = array.length;
+        }
+
+        for (var i = startIndex; i < endIndex; i++) {
+            array[i] = value;
+        }
+        return array;
+   }
+
+
+
+tests({
+    'It should return a modified array': function() {
+     var array = [1,2,3];
+     var result = fill(array, 2);
+     eq(result[0], 2);
+     eq(result[1], 2);
+     eq(result[2], 2);
+    },
+
+    'startIndex should equal 0 if there is no start arg': function() {
+     var array = [1,2,3];
+     var result = fill(array, 2);
+     eq(result[0], 2);
+    },
+
+    'endIndex should equal array.length if there is no start arg': function() {
+     var array = [1,2,3];
+     var result = fill(array, 2);
+     eq(result[2], 2);
+    },
+
+    'It should return an array of undefined values if no args are passed': function() {
+     var array = [1,2,3];
+     var result = fill(array);
+     eq(result[0], undefined);
+     eq(result[1], undefined);
+     eq(result[2], undefined);
+    },
+
+   'It shoudl return the original array if end value is 0': function() {
+       var array = [1,2,3];
+       var result = fill(array,2,1,0);
+       eq(result[0], 1);
+       eq(result[1], 2);
+       eq(result[2], 3);
+    },
+   'It shoudl return the original array if end value is -0': function() {
+       var array = [1,2,3];
+       var result = fill(array,2,1,-0);
+       eq(result[0], 1);
+       eq(result[1], 2);
+       eq(result[2], 3);
+    },
+    'It should default startIndex to 0 if the start value is greater than array.length': function() {
+      var array = [1,2,3];
+      fill(array, 4, 3, 5);
+      eq(array.length, 3);
+    },
+    'It should default endIndex to array.length if the end value is greater than array.length': function() {
+      var array = [1,2,3];
+      fill(array, 4, 3, 5);
+      eq(array.length, 3);
+   }
+});
+</script>

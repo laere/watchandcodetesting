@@ -1,0 +1,48 @@
+<script src="simpletest.js"></script>
+<script>
+
+// The reverse() method reverses an array in place.
+// The first array element becomes the last,
+// and the last array element becomes the first.
+
+function reverse(array) {
+  // Reverses it in place
+  var arrLength = array.length;
+  //cut array in half and swap values
+  for (var i = 0; i < arrLength/2; i++) {
+    // temp = 1 then 2 then 3
+    var temp = array[i];
+
+    //6 = 1 / 2 = 5 / 3 = 4
+    array[i] = array[arrLength-1-i];
+
+    //6 = 1 / 5 = 2 / 4 = 3
+    array[arrLength-1-i] = temp;
+  }
+  return array;
+}
+
+tests({
+    'It should reverse an array in place': function() {
+        var array = [1,2,3];
+        var result = reverse(array);
+        eq(result[0], 3);
+        eq(result[1], 2);
+        eq(result[2], 1);
+    },
+    'The original first element should become the last element.': function() {
+        var array = [1,2,3];
+        var originalFirstElement = array[0];
+        var result = reverse(array);
+        eq(originalFirstElement === result[2], true);
+    },
+    'The last element should become the original first element.': function() {
+        var array = [1,2,3];
+        var originalLastElement = array[2];
+        var result = reverse(array);
+        eq(originalLastElement === result[0], true);
+    },
+});
+
+
+</script>
