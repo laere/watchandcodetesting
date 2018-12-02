@@ -1,22 +1,56 @@
 <script src="../simpletest.js"></script>
+
 <script>
 
-// The shift() method removes the first element from an array and
-// returns that removed element. This method changes the length of the array.
+// The unshift() method adds one or more elements to the beginning
+// of an array and returns the new length of the array.
+
+// It shoudl return the new length of the array.
+// It should add an element to beginning of an array.
+
+function unshift(array) {
+    // Define a copy of the array being passed in.
+    var originalArray = array.slice();
 
 
-// Requirements:
+    var len = array.length + arguments.length - 1;
+    var originalIndex = 0;
+    //Because we're passing in an array as the first arg, we want to start
+    // the arg index at 1.
+    var argIndex = 1;
 
-//It should return the value of the removed element.
-//It should change the length of the array.
-//It should return undefined if the array is empty.
-
-
-
+    for (var i = 0; i < len; i++) {
+        //if argIndex is in arguments
+        if (argIndex in arguments) {
+            // set the current value in the array to the current arg value
+            array[i] = arguments[argIndex];
+            // increase to the next index
+            argIndex++;
+        } else {
+            // if no more args
+            // add the values of the originalArray to the array passed as arg
+            if (originalIndex in originalArray) {
+                array[i] = originalArray[originalIndex];
+                originalIndex++;
+            }
+        }
+    }
+    return len;
+}
 
 
 tests({
-  
+    'It should return the new length of the array.': function() {
+        var array = [1,2,3];
+        var result = unshift(array, 4);
+        eq(result, 4);
+
+    },
+    'It should add an element to the beginning of an array.': function() {
+        var array = [1,2,3];
+        unshift(array, 4);
+        eq(array[0], 4);
+    }
 });
 
 
