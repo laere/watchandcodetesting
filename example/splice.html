@@ -45,6 +45,12 @@ function splice(array, start, deleteCount) {
     deleteCount = len;
   }
 
+  if (start > len) {
+    start = len;
+  } else if (start < 0) {
+    start += len;
+  }
+
 
   // var argIndex = 3;
   // if (argCount > 3) {
@@ -106,7 +112,18 @@ tests({
     eq(result.length, 0);
     eq(months.length, 4);
   },
-
+  'If the start value is greater than array.length then start should equal array.length': function() {
+    var months = ['Jan', 'March', 'April', 'June'];
+    var result = splice(months, 5);
+    eq(result.length, 0);
+    eq(months.length, 4);
+  },
+  'If start is negative it should begin that many elements from the end of the array.':function() {
+    var months = ['Jan', 'March', 'April', 'June'];
+    var result = splice(months, -1);
+    eq(result.length, 1);
+    eq(result, 'June');
+  }
 
   // '':function() {},
   // '':function() {},

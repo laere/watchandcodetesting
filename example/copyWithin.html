@@ -1,0 +1,152 @@
+<script src="../simpletest.js"></script>
+<script>
+
+
+     function copyWithin(array, target, optionalStart, optionalEnd) {
+       var copy = Array.prototype.slice.call(array);
+       var argCount = arguments.length;
+       var start = 0;
+       var end = array.length;
+
+       if (target < 0) {
+        target += array.length;
+      }
+
+       if (argCount >= 3) {
+         if (optionalStart < 0) {
+           start = optionalStart + array.length;
+         } else {
+           start = optionalStart;
+         }
+       }
+
+       if (argCount === 4) {
+        if (optionalEnd < 0) {
+          end = optionalEnd + array.length;
+        } else {
+          end = optionalEnd;
+        }
+      }
+
+       for (target; target < array.length; target++) {
+         if (start < end) {
+            if (start in copy) {
+             array[target] = copy[start]
+             start++;
+          }
+         }
+       }
+      return array;
+    }
+
+
+tests({
+
+ 'It should copy part of an array to another location in the same array.':function() {
+     var array = [1,2,3];
+     var result = copyWithin(array, 1);
+     eq(result[0], 1);
+     eq(result[1], 1);
+     eq(result[2], 2);
+ },
+ 'It should return the modified array.':function() {
+     var array = [1,2,3];
+     var result = copyWithin(array, 1);
+     eq(result[0], 1);
+     eq(result[1], 1);
+     eq(result[2], 2);
+ },
+ 'It should return the array without modifying its size.':function() {
+     var array = [1,2,3];
+     var result = copyWithin(array, 1);
+     eq(array.length, 3);
+     eq(result.length, 3);
+ },
+ 'It should return the original array if no arguments are passed in': function() {
+     var array = [1,2,3];
+     var result = copyWithin(array);
+     eq(result[0], 1);
+     eq(result[1], 2);
+     eq(result[2], 3);
+ },
+
+ 'If target is the only argument, it should copy through the array.':function() {
+     var array = [1,2,3,4,5];
+     var result = copyWithin(array, 1);
+     eq(result[0], 1);
+     eq(result[1], 1);
+     eq(result[2], 2);
+     eq(result[3], 3);
+     eq(result[4], 4);
+ },
+ 'If target is negative, the index should be counted from the end of the array.':function() {
+     var array = [1,2,3,4,5];
+     var result = copyWithin(array, -1);
+     eq(result[0], 1);
+     eq(result[1], 2);
+     eq(result[2], 3);
+     eq(result[3], 4);
+     eq(result[4], 1);
+ },
+ 'If target is greater than array.length, nothing will be copied.':function() {
+     var array = [1,2,3];
+     var result = copyWithin(array, 10);
+     eq(result[0], 1);
+     eq(result[1], 2);
+     eq(result[2], 3);
+ },
+ 'If target is positioned after START, the copied sequence will be trimmed to fit array.length.':function() {
+     var array = [1,2,3,4,5];
+     var result = copyWithin(array, 2, 1);
+     eq(result[0], 1);
+     eq(result[1], 2);
+     eq(result[2], 2);
+     eq(result[3], 3);
+     eq(result[4], 4);
+ },
+
+ 'It should copy the elements at the index of the value of start.':function() {
+     var array = [1,2,3];
+     var result = copyWithin(array, 1);
+     eq(result[0], 1);
+     eq(result[1], 1);
+     eq(result[2], 2)
+ },
+ 'If start < 0 the index of start will be counted from the end.':function() {
+     var array = [1,2,3];
+     var result = copyWithin(array, 0, -1);
+     eq(result[0], 3);
+ },
+
+ 'It should copy up not includng the end.':function() {
+      var array = [1,2,3,4,5];
+     var result = copyWithin(array, 1);
+     eq(result[0], 1);
+     eq(result[1], 1);
+     eq(result[2], 2);
+     eq(result[3], 3);
+     eq(result[4], 4);
+ },
+ 'If end < 0 it should count from the end of the array.':function() {
+     var array = [1,2,3,4,5];
+     var result = copyWithin(array, 2, 1, -2);
+     eq(result[0], 1);
+     eq(result[1], 2);
+     eq(result[2], 2);
+     eq(result[3], 3);
+     eq(result[4], 5);
+ },
+ 'If end is omitted, copyWithin will copy until the end of the array (array.length).':function() {
+     var array = [1,2,3,4,5];
+     var result = copyWithin(array, 2, 1);
+     eq(result[0], 1);
+     eq(result[1], 2);
+     eq(result[2], 2);
+     eq(result[3], 3);
+     eq(result[4], 4);
+ }
+
+
+
+});
+</script>
