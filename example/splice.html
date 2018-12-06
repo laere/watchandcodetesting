@@ -31,49 +31,70 @@
   // If no elements are removed, it returns an empty array.
 
 function splice(array, start, deleteCount) {
-    var removed = [];
-    
-        // Start
-        if (start > array.length) {
-          start = array.length;
-        }
-
-        if (start < 0) {
-          start += array.length;
-        }
-
-        if (Math.abs(start) > array.length) {
-          start = 0;
-        }
-
-        //DeleteCount
-        if (deleteCount > array.length - start) {
-          deleteCount = array.length - start;
-        }
-
-        if (deleteCount === 0 || deleteCount < 0) {
-          deleteCount = 0;
-        }
+  var removed = [];
+ var copy = Array.prototype.slice.call(array);
 
 
-        if (deleteCount) {
-          for (var j = start; j < start + deleteCount; j++) {
-            if (j in array) {
-              removed.push(array[j]);
-              delete array[j];
+   // Start
+   if (start > array.length) {
+     start = array.length;
+   }
+
+   if (start < 0) {
+     start += array.length;
+   }
+
+   if (Math.abs(start) > array.length) {
+     start = 0;
+   }
+
+   //DeleteCount
+   if (deleteCount > array.length - start) {
+     deleteCount = array.length - start;
+   }
+
+   if (deleteCount === 0 || deleteCount < 0) {
+     deleteCount = 0;
+   }
+
+
+
+
+
+   if (deleteCount) {
+     for (var j = start; j < start + deleteCount; j++)
+       if (j in array) {
+         removed.push(array[j]);
+         delete array[j];
+      }
+   }
+
+   if (arguments.length <= 2) {
+     for (start; start < array.length; start++){
+       removed.push(array[start]);
+       delete array[start];
+     }
+   }
+
+   var copyIndex = start + deleteCount;
+   var argIndex = 3;
+
+   if (arguments.length >= 4) {
+     for (var k = start; k < array.length + arguments.length - 1; k++) {
+       if (argIndex in arguments) {
+         array[k] = arguments[argIndex];
+         argIndex++;
+         }  else {
+           if (copyIndex in copy) {
+             // k = 4
+             array[k] = copy[copyIndex];
+             copyIndex++;
            }
-          }
-        }
-        if (arguments.length <= 2) {
-          for (start; start < array.length; start++){
-            if (start in array) {
-              removed.push(array[start]);
-              delete array[start];
-            }
-          }
-        }
-      return removed;
-    }
+         }
+       }
+     }
+ return removed;
+}
 
 
 
@@ -147,8 +168,40 @@ tests({
   },
 
   'It should add elements to the array beginning at the start index.':function() {
-    fail();
+    var months = ['Jan', 'March', 'April', 'June'];
+    var result = splice(months, 1, 1, 'Dec');
+    eq(result.length, 1);
+    eq(result[0], 'March');
+    eq(months.length, 4);
+    eq(months[0], 'Jan');
+    eq(months[1], 'Dec');
+    eq(months[2], 'April');
+    eq(months[3], 'June');
   },
+
+  'It should remove the element being deleted and replace it with the added element.':function() {
+    var months = ['Jan', 'March', 'April', 'June'];
+    var result = splice(months, 1, 1, 'Dec');
+    eq(result.length, 1);
+    eq(result[0], 'March');
+    eq(months.length, 4);
+    eq(months[0], 'Jan');
+    eq(months[1], 'Dec');
+    eq(months[2], 'April');
+    eq(months[3], 'June');
+  },
+  'It should handle adding multiple elements.':function() {
+    var months = ['Jan', 'March', 'April', 'June'];
+    var result = splice(months, 1, 1, 'Dec', 'July');
+    eq(result.length, 1);
+    eq(result[0], 'March');
+    eq(months.length, 5);
+    eq(months[0], 'Jan');
+    eq(months[1], 'Dec');
+    eq(months[2], 'July');
+    eq(months[3], 'April');
+    eq(months[4], 'June');
+  }
 
 
 });
