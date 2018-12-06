@@ -31,102 +31,125 @@
   // If no elements are removed, it returns an empty array.
 
 function splice(array, start, deleteCount) {
-  var removed = [];
-  var len = array.length;
-  var argCount = arguments.length;
+    var removed = [];
+    
+        // Start
+        if (start > array.length) {
+          start = array.length;
+        }
 
-  if (deleteCount) {
-    if (deleteCount === 0) {
-         deleteCount = len;
-    } else if (deleteCount < 0) {
-        deleteCount = 0;
+        if (start < 0) {
+          start += array.length;
+        }
+
+        if (Math.abs(start) > array.length) {
+          start = 0;
+        }
+
+        //DeleteCount
+        if (deleteCount > array.length - start) {
+          deleteCount = array.length - start;
+        }
+
+        if (deleteCount === 0 || deleteCount < 0) {
+          deleteCount = 0;
+        }
+
+
+        if (deleteCount) {
+          for (var j = start; j < start + deleteCount; j++) {
+            if (j in array) {
+              removed.push(array[j]);
+              delete array[j];
+           }
+          }
+        }
+        if (arguments.length <= 2) {
+          for (start; start < array.length; start++){
+            if (start in array) {
+              removed.push(array[start]);
+              delete array[start];
+            }
+          }
+        }
+      return removed;
     }
-  } else if (deleteCount > len - start || argCount < 3) {
-    deleteCount = len;
-  }
-
-  if (start > len) {
-    start = len;
-  } else if (start < 0) {
-    start += len;
-  }
-
-
-  // var argIndex = 3;
-  // if (argCount > 3) {
-  //   for (var i = 0; i < len; i++) {
-  //     array.push(arguments[argIndex]);
-  //     argIndex++;
-  //   }
-  // }
-
-  for (var i = start; i < deleteCount; i++) {
-    removed.push(array[i]);
-  }
-
-  return removed;
-}
 
 
 
 
 tests({
+
   'It should return an array containing the deleted elements.':function() {
     var months = ['Jan', 'March', 'April', 'June'];
     var result = splice(months, 2);
-    eq(Array.isArray(result), true);
     eq(result[0], 'April');
     eq(result[1], 'June');
+    eq(result.length, 2);
   },
+
   'It should return an array of one element if one element is removed.':function() {
     var months = ['Jan', 'March', 'April', 'June'];
-    var result = splice(months, 0, 1);
-    eq(result[0], 'Jan');
-
+    var result = splice(months, 2, 1);
+    eq(result[0], 'April');
+    eq(result.length, 1);
   },
+
   'It should return an empty array if no elements are removed.':function() {
     var months = ['Jan', 'March', 'April', 'June'];
     var result = splice(months);
+    eq(Array.isArray(result), true);
     eq(result.length, 0);
   },
+
   'It should delete through all elements of the array if deleteCount is omitted.':function() {
     var months = ['Jan', 'March', 'April', 'June'];
-    var result = splice(months, 1);
-    eq(result.length, 3);
+    var result = splice(months, 2);
+    eq(result[0], 'April');
+    eq(result[1], 'June');
+    eq(result.length, 2);
   },
 
   'It should delete through all element sof the array if deleteCount > array.length - start':function() {
     var months = ['Jan', 'March', 'April', 'June'];
-    var result = splice(months,1,4);
-    eq(result.length, 3);
+    var result = splice(months, 1, 8);
+    eq(result[0], 'March');
+    eq(result[1], 'April');
+    eq(result[2], 'June');
   },
+
   'No items should be deleted from the array if deleteCount equals 0':function() {
     var months = ['Jan', 'March', 'April', 'June'];
-    var result = splice(months,1,0);
+    var result = splice(months, 1, 0);
+    eq(Array.isArray(result), true);
     eq(result.length, 0);
-    eq(months.length, 4);
   },
+
   'No items should be deleted from the array if deleteCount is negative':function() {
     var months = ['Jan', 'March', 'April', 'June'];
     var result = splice(months, 1, -1);
+    eq(Array.isArray(result), true);
     eq(result.length, 0);
-    eq(months.length, 4);
   },
+
   'If the start value is greater than array.length then start should equal array.length': function() {
     var months = ['Jan', 'March', 'April', 'June'];
     var result = splice(months, 5);
+    eq(Array.isArray(result), true);
     eq(result.length, 0);
-    eq(months.length, 4);
   },
+
   'If start is negative it should begin that many elements from the end of the array.':function() {
     var months = ['Jan', 'March', 'April', 'June'];
     var result = splice(months, -1);
+    eq(result[0], 'June');
     eq(result.length, 1);
-    eq(result, 'June');
-  }
+  },
 
-  // '':function() {},
-  // '':function() {},
+  'It should add elements to the array beginning at the start index.':function() {
+    fail();
+  },
+
 
 });
 
